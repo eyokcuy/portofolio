@@ -7,6 +7,7 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.enableCors();
+  app.set('trust proxy', 1);
 
   // Serve uploaded files statically
   app.useStaticAssets(join(__dirname, '..', 'uploads'), {

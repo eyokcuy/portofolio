@@ -8,6 +8,7 @@ import {
   Post,
   Res,
 } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import type { Response } from 'express';
 import { TestimonialsService } from './testimonials.service';
 import {
@@ -54,6 +55,7 @@ export class TestimonialsController {
     res.write(`data: ${JSON.stringify({ ok: true })}\n\n`);
   }
 
+  @Throttle({ default: { limit: 1, ttl: 60000 } })
   @Post()
   create(@Body() body) {
     return this.service.create(body);

@@ -1,36 +1,31 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { getTestimonials } from "../../lib/api";
 import Card from "../../ui/Card";
 import Button from "../../ui/Button";
+import TestimonialModal from "./TestimonialModal";
+import { FiPlus } from "react-icons/fi";
 
 export default function TestimonialsSection() {
   const [testimonials, setTestimonials] = useState([]);
   const [active, setActive] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const fetchTestimonials = useCallback(async () => {
+    try {
+      const res = await getTestimonials();
+      setTestimonials(res.data);
+    } catch {
+      setTestimonials([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    let cancelled = false;
-
-    (async () => {
-      try {
-        const res = await getTestimonials();
-        if (!cancelled) {
-          setTestimonials(res.data);
-        }
-      } catch {
-        if (!cancelled) {
-          setTestimonials([]);
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    })();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+    fetchTestimonials();
+  }, [fetchTestimonials]);
 
   // SSE for real-time updates
   useEffect(() => {
@@ -89,28 +84,38 @@ export default function TestimonialsSection() {
   return (
     <section className="max-w-[1500px] mx-auto px-4 md:px-6 py-14">
       <Card className="bg-black text-yellow-300" shadowSize="12px" hoverScale={1}>
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <h2 className="text-4xl md:text-5xl font-black uppercase leading-none">
             Testimonials
           </h2>
 
-          <div className="flex gap-2">
+          <div className="flex items-center gap-4">
             <Button
-              onClick={prev}
-              variant="white"
-              className="w-12 h-12 flex items-center justify-center font-black text-lg p-0"
-              aria-label="Previous testimonial"
+              onClick={() => setIsModalOpen(true)}
+              variant="yellow"
+              className="flex items-center gap-2 py-2 px-4 text-xs"
             >
-              ←
+              <FiPlus /> Give Feedback
             </Button>
-            <Button
-              onClick={next}
-              variant="white"
-              className="w-12 h-12 flex items-center justify-center font-black text-lg p-0"
-              aria-label="Next testimonial"
-            >
-              →
-            </Button>
+
+            <div className="flex gap-2">
+              <Button
+                onClick={prev}
+                variant="white"
+                className="w-10 h-10 flex items-center justify-center font-black text-lg p-0"
+                aria-label="Previous testimonial"
+              >
+                ←
+              </Button>
+              <Button
+                onClick={next}
+                variant="white"
+                className="w-10 h-10 flex items-center justify-center font-black text-lg p-0"
+                aria-label="Next testimonial"
+              >
+                →
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -182,6 +187,12 @@ export default function TestimonialsSection() {
           ))}
         </div>
       </Card>
+
+      <TestimonialModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onSuccess={fetchTestimonials} 
+      />
     </section>
   );
 }

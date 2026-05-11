@@ -10,6 +10,9 @@ import { UploadModule } from './upload/upload.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
+
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -23,6 +26,11 @@ import { UsersModule } from './users/users.module';
       synchronize: true, // dev only
     }),
 
+    ThrottlerModule.forRoot([{
+      ttl: 120000, // 2 minutes in milliseconds
+      limit: 5,    // 5 requests per IP
+    }]),
+
     ProjectsModule,
     TestimonialsModule,
     UploadModule,
@@ -30,6 +38,12 @@ import { UsersModule } from './users/users.module';
     UsersModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}
