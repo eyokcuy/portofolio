@@ -6,6 +6,20 @@ export const api = axios.create({
   baseURL: API_BASE_URL,
 });
 
+// Global Error Interceptor for Rate Limiting
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 429) {
+      // Redirect to rate limit page
+      // Using window.location for hard redirect since we are outside React component
+      const currentPath = window.location.pathname;
+      window.location.href = `/rate-limit?from=${encodeURIComponent(currentPath)}`;
+    }
+    return Promise.reject(error);
+  }
+);
+
 export function getProjects() {
   return api.get("/projects");
 }

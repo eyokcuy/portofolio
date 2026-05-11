@@ -8,6 +8,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminProjects from "./pages/admin/AdminProjects";
 import AdminTestimonials from "./pages/admin/AdminTestimonials";
 import AdminUsers from "./pages/admin/AdminUsers";
+import RateLimit from "./pages/RateLimit";
 import { AuthProvider } from "./context/AuthContext";
 import { Toaster } from "sonner";
 
@@ -23,6 +24,7 @@ function AnimatedRoutes() {
 
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Navigate to="/login" replace />} />
+        <Route path="/rate-limit" element={<RateLimit />} />
 
         <Route element={<AdminLayout />}>
           <Route path="/admin" element={<AdminDashboard />} />

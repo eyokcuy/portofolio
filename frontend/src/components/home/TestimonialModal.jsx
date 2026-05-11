@@ -7,6 +7,7 @@ import Card from "../../ui/Card";
 import Button from "../../ui/Button";
 
 export default function TestimonialModal({ isOpen, onClose, onSuccess }) {
+
   const [formData, setFormData] = useState({
     name: "",
     role: "",
@@ -54,9 +55,7 @@ export default function TestimonialModal({ isOpen, onClose, onSuccess }) {
       }, 1000);
 
     } catch (error) {
-      if (error.response?.status === 429) {
-        toast.error("You are sending requests too fast. Please wait.");
-      } else {
+      if (error.response?.status !== 429) {
         toast.error("Failed to submit testimonial. Try again later.");
       }
     } finally {
