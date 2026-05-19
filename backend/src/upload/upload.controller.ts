@@ -31,7 +31,9 @@ export class UploadController {
     }),
   )
   uploadFile(@UploadedFile() file: Express.Multer.File) {
-    const url = `http://localhost:3000/uploads/${file.filename}`;
+    // Return relative URL so it works across different hosts/ports.
+    // Frontend can prepend API_BASE_URL if needed.
+    const url = `/uploads/${file.filename}`;
     return { url };
   }
 }
