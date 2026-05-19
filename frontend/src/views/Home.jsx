@@ -6,7 +6,7 @@ import AboutSection from "../components/home/AboutSection";
 import ServicesSection from "../components/home/ServicesSection";
 import TechStackSection from "../components/home/TechStackSection";
 import ProjectsSection from "../components/home/ProjectSection";
-import TestimonialsSection from "../components/home/TestimonialsSection";
+import FeedbacksSection from "../components/home/FeedbacksSection";
 import ContactSection from "../components/home/ContactSection";
 import SectionReveal from "../components/animation/SectionReveal";
 
@@ -81,10 +81,10 @@ export default function Home() {
           </SectionReveal>
         </section>
 
-        {/* TESTIMONIALS */}
-        <section id="testimonials">
+        {/* FEEDBACKS */}
+        <section id="feedbacks">
           <SectionReveal>
-            <TestimonialsSection />
+            <FeedbacksSection />
           </SectionReveal>
         </section>
 

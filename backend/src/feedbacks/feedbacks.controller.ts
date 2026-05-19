@@ -1,26 +1,22 @@
 import {
-  Body,
   Controller,
-  Delete,
   Get,
-  Param,
-  Patch,
   Post,
+  Patch,
+  Delete,
+  Body,
+  Param,
   Res,
 } from '@nestjs/common';
-import { Throttle } from '@nestjs/throttler';
 import type { Response } from 'express';
-import { TestimonialsService } from './testimonials.service';
-import {
-  TestimonialsEvents,
-  TestimonialsEventPayload,
-} from './testimonials.events';
+import { FeedbacksService } from './feedbacks.service';
+import { FeedbacksEvents, FeedbackEventPayload } from './feedbacks.events';
 
-@Controller('testimonials')
-export class TestimonialsController {
+@Controller('feedbacks')
+export class FeedbacksController {
   constructor(
-    private service: TestimonialsService,
-    private readonly events: TestimonialsEvents,
+    private readonly service: FeedbacksService,
+    private readonly events: FeedbacksEvents,
   ) {}
 
   @Get()
@@ -39,31 +35,30 @@ export class TestimonialsController {
       res.write(`data: ${JSON.stringify({ ts: Date.now() })}\n\n`);
     }, 25000);
 
-    const listener = (payload: TestimonialsEventPayload) => {
-      res.write('event: testimonial_changed\n');
+    const listener = (payload: FeedbackEventPayload) => {
+      res.write('event: feedback_changed\n');
       res.write(`data: ${JSON.stringify(payload)}\n\n`);
     };
 
-    this.events.on('testimonial_changed', listener);
+    this.events.on('feedback_changed', listener);
 
     res.on('close', () => {
       clearInterval(keepAlive);
-      this.events.off('testimonial_changed', listener);
+      this.events.off('feedback_changed', listener);
     });
 
     res.write('event: ready\n');
     res.write(`data: ${JSON.stringify({ ok: true })}\n\n`);
   }
 
-  @Throttle({ default: { limit: 1, ttl: 60000 } })
   @Post()
   create(@Body() body) {
     return this.service.create(body);
   }
 
   @Patch(':id')
-  patch(@Param('id') id: string, @Body() body) {
-    return this.service.patch(Number(id), body);
+  update(@Param('id') id: string, @Body() body) {
+    return this.service.update(Number(id), body);
   }
 
   @Delete(':id')

@@ -8,6 +8,7 @@ export default function Card({
   shadowSize = "8px",
   shadowColor = "rgba(0,0,0,1)",
   isStatic = false,
+  style = {},
   ...props
 }) {
   const hoverEffect = isStatic
@@ -21,6 +22,11 @@ export default function Card({
         boxShadow: "none",
       };
 
+  // Detect if background is provided via style or className
+  // If it's a hex color in style.backgroundColor, it's custom.
+  // If className has a bg- class, it's also custom.
+  const hasCustomBg = className.includes("bg-") || (style && style.backgroundColor);
+
   return (
     <motion.div
       whileHover={hoverEffect}
@@ -29,12 +35,17 @@ export default function Card({
         stiffness: 260,
         damping: 18,
       }}
-      className={`border-4 border-black p-6 shadow-[${shadowSize}_${shadowSize}_0px_0px_${shadowColor}] ${
-        className.includes("bg-") ? "" : "bg-white"
+      className={`border-4 border-black p-6 ${
+        hasCustomBg ? "" : "bg-white"
       } ${className}`}
+      style={{
+        boxShadow: `${shadowSize} ${shadowSize} 0px 0px ${shadowColor}`,
+        ...style,
+      }}
       {...props}
     >
       {children}
     </motion.div>
   );
 }
+

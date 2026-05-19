@@ -22,7 +22,8 @@ const sidebarGroups = [
     title: "Content",
     links: [
       { name: "Projects", to: "/admin/projects", icon: <FiLayers /> },
-      { name: "Testimonials", to: "/admin/testimonials", icon: <FiMessageSquare /> },
+      { name: "Feedbacks", to: "/admin/feedbacks", icon: <FiMessageSquare /> },
+      { name: "Stats", to: "/admin/stats", icon: <FiActivity /> },
     ]
   },
   {

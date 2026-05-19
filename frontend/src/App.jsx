@@ -6,8 +6,9 @@ import Home from "./views/Home";
 import Login from "./pages/Login";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminProjects from "./pages/admin/AdminProjects";
-import AdminTestimonials from "./pages/admin/AdminTestimonials";
+import AdminFeedbacks from "./pages/admin/AdminFeedbacks";
 import AdminUsers from "./pages/admin/AdminUsers";
+import AdminStats from "./pages/admin/AdminStats";
 import RateLimit from "./pages/RateLimit";
 import { AuthProvider } from "./context/AuthContext";
 import { Toaster } from "sonner";
@@ -29,8 +30,9 @@ function AnimatedRoutes() {
         <Route element={<AdminLayout />}>
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/projects" element={<AdminProjects />} />
-          <Route path="/admin/testimonials" element={<AdminTestimonials />} />
+          <Route path="/admin/feedbacks" element={<AdminFeedbacks />} />
           <Route path="/admin/users" element={<AdminUsers />} />
+          <Route path="/admin/stats" element={<AdminStats />} />
         </Route>
       </Routes>
     </AnimatePresence>

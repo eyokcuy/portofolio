@@ -7,17 +7,19 @@ export const api = axios.create({
 });
 
 // Global Error Interceptor for Rate Limiting
+// NOTE: We do NOT redirect via window.location.href here because that
+// aborts in-flight admin save/edit operations. Components handle 429
+// errors themselves via their catch blocks (toast + error state).
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 429) {
-      // Redirect to rate limit page
-      // Using window.location for hard redirect since we are outside React component
-      const currentPath = window.location.pathname;
-      window.location.href = `/rate-limit?from=${encodeURIComponent(currentPath)}`;
+      // Simply reject - the calling component will show a toast.
+      // No hard redirect to avoid aborting admin CRUD operations.
     }
+
     return Promise.reject(error);
-  }
+  },
 );
 
 export function getProjects() {
@@ -36,21 +38,38 @@ export function deleteProject(id) {
   return api.delete(`/projects/${id}`);
 }
 
-// --- Testimonials ---
-export function getTestimonials() {
-  return api.get("/testimonials");
+// --- Feedbacks ---
+export function getFeedbacks() {
+  return api.get("/feedbacks");
 }
 
-export function createTestimonial(payload) {
-  return api.post("/testimonials", payload);
+export function createFeedback(payload) {
+  return api.post("/feedbacks", payload);
 }
 
-export function patchTestimonial(id, payload) {
-  return api.patch(`/testimonials/${id}`, payload);
+export function patchFeedback(id, payload) {
+  return api.patch(`/feedbacks/${id}`, payload);
 }
 
-export function deleteTestimonial(id) {
-  return api.delete(`/testimonials/${id}`);
+export function deleteFeedback(id) {
+  return api.delete(`/feedbacks/${id}`);
+}
+
+// --- Stats ---
+export function getStats() {
+  return api.get("/stats");
+}
+
+export function createStat(payload) {
+  return api.post("/stats", payload);
+}
+
+export function patchStat(id, payload) {
+  return api.patch(`/stats/${id}`, payload);
+}
+
+export function deleteStat(id) {
+  return api.delete(`/stats/${id}`);
 }
 
 // --- Upload ---

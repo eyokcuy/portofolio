@@ -9,9 +9,12 @@ export default function RateLimitPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const [timeLeft, setTimeLeft] = useState(60);
-  
-  // Get the last path to redirect back
-  const from = location.state?.from || "/";
+
+  // Get the last path to redirect back (supports both React Router state and URL query param)
+  const from =
+    location.state?.from ||
+    new URLSearchParams(location.search).get("from") ||
+    "/";
 
   useEffect(() => {
     if (timeLeft <= 0) {
@@ -33,7 +36,11 @@ export default function RateLimitPage() {
         animate={{ scale: 1, rotate: 0 }}
         className="w-full max-w-md"
       >
-        <Card className="bg-white border-8 border-black text-center py-12 px-8" shadowSize="16px" isStatic>
+        <Card
+          className="bg-white border-8 border-black text-center py-12 px-8"
+          shadowSize="16px"
+          isStatic
+        >
           <div className="mb-8 flex justify-center">
             <div className="relative">
               <motion.div
@@ -52,27 +59,30 @@ export default function RateLimitPage() {
           <h1 className="text-4xl font-black uppercase tracking-tighter mb-4 leading-none">
             Slow Down, <br /> Rocket Man!
           </h1>
-          
+
           <p className="font-bold text-black/60 mb-8 uppercase text-sm tracking-widest">
             You've hit our rate limit. Take a breath and wait a moment.
           </p>
 
           <div className="bg-black text-yellow-300 py-6 mb-8 border-4 border-black shadow-[6px_6px_0px_0px_rgba(255,255,255,1)]">
             <span className="text-6xl font-black tabular-nums">{timeLeft}</span>
-            <span className="block text-xs font-black uppercase tracking-widest mt-2">Seconds Remaining</span>
+            <span className="block text-xs font-black uppercase tracking-widest mt-2">
+              Seconds Remaining
+            </span>
           </div>
 
           <p className="text-xs font-black text-black/30 uppercase italic mb-8">
             Redirecting back automatically...
           </p>
 
-          <Button 
-            variant="black" 
+          <Button
+            variant="black"
             className="w-full flex items-center justify-center gap-2"
             onClick={() => navigate(from)}
             disabled={timeLeft > 0}
           >
-            {timeLeft > 0 ? "Wait for it..." : "Take me back now"} <FiArrowRight />
+            {timeLeft > 0 ? "Wait for it..." : "Take me back now"}{" "}
+            <FiArrowRight />
           </Button>
         </Card>
       </motion.div>

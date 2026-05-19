@@ -1,39 +1,39 @@
 import { useEffect, useState, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { getTestimonials } from "../../lib/api";
+import { getFeedbacks } from "../../lib/api";
 import Card from "../../ui/Card";
 import Button from "../../ui/Button";
-import TestimonialModal from "./TestimonialModal";
+import FeedbackModal from "./FeedbackModal";
 import { FiPlus } from "react-icons/fi";
 
-export default function TestimonialsSection() {
-  const [testimonials, setTestimonials] = useState([]);
+export default function FeedbacksSection() {
+  const [feedbacks, setFeedbacks] = useState([]);
   const [active, setActive] = useState(0);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const fetchTestimonials = useCallback(async () => {
+  const fetchFeedbacks = useCallback(async () => {
     try {
-      const res = await getTestimonials();
-      setTestimonials(res.data);
+      const res = await getFeedbacks();
+      setFeedbacks(res.data);
     } catch {
-      setTestimonials([]);
+      setFeedbacks([]);
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchTestimonials();
-  }, [fetchTestimonials]);
+    fetchFeedbacks();
+  }, [fetchFeedbacks]);
 
   // SSE for real-time updates
   useEffect(() => {
-    const es = new EventSource("http://localhost:3000/testimonials/events");
+    const es = new EventSource("http://localhost:3000/feedbacks/events");
 
-    es.addEventListener("testimonial_changed", () => {
-      getTestimonials()
-        .then((res) => setTestimonials(res.data))
+    es.addEventListener("feedback_changed", () => {
+      getFeedbacks()
+        .then((res) => setFeedbacks(res.data))
         .catch(() => {});
     });
 
@@ -47,16 +47,16 @@ export default function TestimonialsSection() {
   }, []);
 
   const prev = () =>
-    setActive((a) => (a === 0 ? testimonials.length - 1 : a - 1));
+    setActive((a) => (a === 0 ? feedbacks.length - 1 : a - 1));
   const next = () =>
-    setActive((a) => (a === testimonials.length - 1 ? 0 : a + 1));
+    setActive((a) => (a === feedbacks.length - 1 ? 0 : a + 1));
 
   if (loading) {
     return (
       <section className="max-w-[1500px] mx-auto px-4 md:px-6 py-14">
         <Card className="bg-black text-yellow-300" shadowSize="12px">
           <h2 className="text-4xl md:text-5xl font-black uppercase leading-none">
-            Testimonials
+            Feedbacks
           </h2>
           <p className="mt-8 text-white font-bold text-lg">Loading...</p>
         </Card>
@@ -64,29 +64,44 @@ export default function TestimonialsSection() {
     );
   }
 
-  if (testimonials.length === 0) {
+  if (feedbacks.length === 0) {
     return (
       <section className="max-w-[1500px] mx-auto px-4 md:px-6 py-14">
         <Card className="bg-black text-yellow-300" shadowSize="12px">
-          <h2 className="text-4xl md:text-5xl font-black uppercase leading-none">
-            Testimonials
-          </h2>
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <h2 className="text-4xl md:text-5xl font-black uppercase leading-none">
+              Feedbacks
+            </h2>
+            <Button
+              onClick={() => setIsModalOpen(true)}
+              variant="yellow"
+              className="flex items-center gap-2 py-2 px-4 text-xs"
+            >
+              <FiPlus /> Give Feedback
+            </Button>
+          </div>
           <p className="mt-8 text-white font-bold text-lg opacity-70">
-            No testimonials yet. Be the first!
+            No feedbacks yet. Be the first!
           </p>
         </Card>
+
+        <FeedbackModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSuccess={fetchFeedbacks}
+        />
       </section>
     );
   }
 
-  const current = testimonials[active] || testimonials[0];
+  const current = feedbacks[active] || feedbacks[0];
 
   return (
     <section className="max-w-[1500px] mx-auto px-4 md:px-6 py-14">
       <Card className="bg-black text-yellow-300" shadowSize="12px" hoverScale={1}>
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <h2 className="text-4xl md:text-5xl font-black uppercase leading-none">
-            Testimonials
+            Feedbacks
           </h2>
 
           <div className="flex items-center gap-4">
@@ -103,7 +118,7 @@ export default function TestimonialsSection() {
                 onClick={prev}
                 variant="white"
                 className="w-10 h-10 flex items-center justify-center font-black text-lg p-0"
-                aria-label="Previous testimonial"
+                aria-label="Previous feedback"
               >
                 ←
               </Button>
@@ -111,7 +126,7 @@ export default function TestimonialsSection() {
                 onClick={next}
                 variant="white"
                 className="w-10 h-10 flex items-center justify-center font-black text-lg p-0"
-                aria-label="Next testimonial"
+                aria-label="Next feedback"
               >
                 →
               </Button>
@@ -175,23 +190,23 @@ export default function TestimonialsSection() {
         </div>
 
         <div className="mt-4 flex justify-center gap-2">
-          {testimonials.map((_, i) => (
+          {feedbacks.map((_, i) => (
             <button
               key={i}
               onClick={() => setActive(i)}
               className={`w-3 h-3 border-2 border-yellow-300 transition-all duration-200 ${
                 i === active ? "bg-yellow-300 scale-125" : "bg-black"
               }`}
-              aria-label={`Go to testimonial ${i + 1}`}
+              aria-label={`Go to feedback ${i + 1}`}
             />
           ))}
         </div>
       </Card>
 
-      <TestimonialModal 
+      <FeedbackModal 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
-        onSuccess={fetchTestimonials} 
+        onSuccess={fetchFeedbacks} 
       />
     </section>
   );

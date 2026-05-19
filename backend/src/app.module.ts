@@ -5,10 +5,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 import { ProjectsModule } from './projects/projects.module';
-import { TestimonialsModule } from './testimonials/testimonials.module';
+import { FeedbacksModule } from './feedbacks/feedbacks.module';
 import { UploadModule } from './upload/upload.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { StatsModule } from './stats/stats.module';
 
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
@@ -26,16 +27,19 @@ import { APP_GUARD } from '@nestjs/core';
       synchronize: true, // dev only
     }),
 
-    ThrottlerModule.forRoot([{
-      ttl: 120000, // 2 minutes in milliseconds
-      limit: 5,    // 5 requests per IP
-    }]),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000, // 1 minute
+        limit: 200, // 200 requests per minute for admin panel + SSE
+      },
+    ]),
 
     ProjectsModule,
-    TestimonialsModule,
+    FeedbacksModule,
     UploadModule,
     AuthModule,
     UsersModule,
+    StatsModule,
   ],
   controllers: [AppController],
   providers: [

@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiX, FiSend, FiStar, FiUser, FiBriefcase, FiMessageCircle } from "react-icons/fi";
-import { createTestimonial } from "../../lib/api";
+import { createFeedback } from "../../lib/api";
 import { toast } from "sonner";
 import Card from "../../ui/Card";
 import Button from "../../ui/Button";
 
-export default function TestimonialModal({ isOpen, onClose, onSuccess }) {
+export default function FeedbackModal({ isOpen, onClose, onSuccess }) {
 
   const [formData, setFormData] = useState({
     name: "",
@@ -30,13 +30,13 @@ export default function TestimonialModal({ isOpen, onClose, onSuccess }) {
     e.preventDefault();
     if (cooldown > 0) return;
     if (!formData.name || !formData.text) {
-      toast.error("Please fill in your name and testimonial!");
+      toast.error("Please fill in your name and feedback!");
       return;
     }
 
     setLoading(true);
     try {
-      await createTestimonial(formData);
+      await createFeedback(formData);
       toast.success("Thank you for your feedback!");
       onSuccess();
       onClose();
@@ -56,7 +56,7 @@ export default function TestimonialModal({ isOpen, onClose, onSuccess }) {
 
     } catch (error) {
       if (error.response?.status !== 429) {
-        toast.error("Failed to submit testimonial. Try again later.");
+        toast.error("Failed to submit feedback. Try again later.");
       }
     } finally {
       setLoading(false);
@@ -126,7 +126,7 @@ export default function TestimonialModal({ isOpen, onClose, onSuccess }) {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-xs font-black uppercase tracking-widest text-black/40">Testimonial Message</label>
+                    <label className="text-xs font-black uppercase tracking-widest text-black/40">Feedback Message</label>
                     <textarea
                       rows="4"
                       value={formData.text}
@@ -184,7 +184,7 @@ export default function TestimonialModal({ isOpen, onClose, onSuccess }) {
                       `Wait ${cooldown}s...`
                     ) : (
                       <>
-                        <FiSend /> Send Testimonial
+                        <FiSend /> Send Feedback
                       </>
                     )}
                   </Button>
