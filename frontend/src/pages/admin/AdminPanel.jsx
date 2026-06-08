@@ -79,7 +79,7 @@ export default function AdminPanel() {
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, []);
 
   const addProject = async () => {

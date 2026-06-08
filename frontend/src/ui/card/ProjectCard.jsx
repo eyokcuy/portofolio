@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import ProjectCardHeader from "./ProjectCardHeader";
 import ProjectCardTags from "./ProjectCardTags";
 import ProjectCardBody from "./ProjectCardBody";
-import ProjectCardCTA from "./ProjectCardCTA";
 import ProjectCardStatusBadge from "./ProjectCardStatusBadge";
 import ProjectCardTechStack from "./ProjectCardTechStack";
 import ProjectCardFooter from "./ProjectCardFooter";
@@ -12,7 +11,6 @@ export default function ProjectCard({
   headerColor,
   tags = [],
   description,
-  ctaText = "View Project →",
   index = 0,
   status = "Live",
   githubUrl,

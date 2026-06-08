@@ -46,7 +46,6 @@ export default function AdminProjects() {
   const [status, setStatus] = useState("Live");
   const [imageUrl, setImageUrl] = useState("");
   const [imageFile, setImageFile] = useState(null);
-  const [uploading, setUploading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const fileInputRef = useRef(null);
 
@@ -61,7 +60,6 @@ export default function AdminProjects() {
   const [editStatus, setEditStatus] = useState("Live");
   const [editImageUrl, setEditImageUrl] = useState("");
   const [editImageFile, setEditImageFile] = useState(null);
-  const [editUploading, setEditUploading] = useState(false);
   const [patching, setPatching] = useState(false);
   const editFileInputRef = useRef(null);
 
@@ -398,7 +396,7 @@ export default function AdminProjects() {
               imageFile,
               setImageFile,
               setImageUrl,
-              uploading,
+              false,
               fileInputRef,
             )}
           </div>
@@ -407,7 +405,7 @@ export default function AdminProjects() {
         <div className="flex items-center gap-3 mt-4">
           <Button
             onClick={addProject}
-            disabled={!canSubmit || submitting || uploading}
+            disabled={!canSubmit || submitting}
             variant="black"
             className="px-6 py-3"
             isStatic
@@ -594,7 +592,7 @@ export default function AdminProjects() {
                       editImageFile,
                       setEditImageFile,
                       setEditImageUrl,
-                      editUploading,
+                      false,
                       editFileInputRef,
                     )}
                   </div>
@@ -603,7 +601,7 @@ export default function AdminProjects() {
                 <div className="flex gap-2 mt-4">
                   <Button
                     onClick={savePatch}
-                    disabled={!canPatch || patching || editUploading}
+                    disabled={!canPatch || patching}
                     variant="black"
                     className="px-6 py-3"
                     isStatic

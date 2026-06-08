@@ -1,4 +1,10 @@
-import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+  Navigate,
+} from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import MainLayout from "./layouts/MainLayouts";
 import AdminLayout from "./layouts/AdminLayout";
@@ -15,18 +21,16 @@ import { Toaster } from "sonner";
 
 function AnimatedRoutes() {
   const location = useLocation();
-  
+
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
         </Route>
-
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Navigate to="/login" replace />} />
         <Route path="/rate-limit" element={<RateLimit />} />
-
         <Route element={<AdminLayout />}>
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/projects" element={<AdminProjects />} />

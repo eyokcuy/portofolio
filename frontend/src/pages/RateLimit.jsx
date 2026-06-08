@@ -5,7 +5,7 @@ import { FiClock, FiAlertTriangle, FiArrowRight } from "react-icons/fi";
 import Card from "../ui/Card";
 import Button from "../ui/Button";
 
-export default function RateLimitPage() {
+export default function RateLimit() {
   const navigate = useNavigate();
   const location = useLocation();
   const [timeLeft, setTimeLeft] = useState(60);

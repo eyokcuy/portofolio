@@ -1,20 +1,22 @@
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-import {
-  getUsers,
-  createUser,
-  updateUser,
-  deleteUser
-} from "../../lib/api";
+import { getUsers, createUser, updateUser, deleteUser } from "../../lib/api";
 import { confirmAction } from "../../lib/confirm";
 import Card from "../../ui/Card";
 import Button from "../../ui/Button";
-import { FiUser, FiMail, FiShield, FiTrash2, FiEdit2, FiPlus, FiX, FiCheck } from "react-icons/fi";
+import {
+  FiUser,
+  FiShield,
+  FiTrash2,
+  FiEdit2,
+  FiPlus,
+  FiX,
+  FiCheck,
+} from "react-icons/fi";
 
 export default function AdminUsers() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
 
   // Form State
   const [isAdding, setIsAdding] = useState(false);
@@ -33,9 +35,8 @@ export default function AdminUsers() {
     try {
       const res = await getUsers();
       setUsers(res.data);
-    } catch (e) {
+    } catch {
       toast.error("Failed to load users");
-      setError("Failed to load users");
     } finally {
       setLoading(false);
     }
@@ -58,8 +59,8 @@ export default function AdminUsers() {
       setPassword("");
       setRole("user");
       fetchUsers();
-    } catch (e) {
-      toast.error(e.response?.data?.message || "Failed to create user");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to create user");
     } finally {
       setSubmitting(false);
     }
@@ -71,7 +72,7 @@ export default function AdminUsers() {
       toast.success("User updated successfully");
       setEditingId(null);
       fetchUsers();
-    } catch (e) {
+    } catch {
       toast.error("Failed to update user");
     }
   };
@@ -93,7 +94,7 @@ export default function AdminUsers() {
         await deleteUser(id);
         toast.success("User deleted");
         fetchUsers();
-      } catch (e) {
+      } catch {
         toast.error("Failed to delete user");
       }
     }
@@ -103,10 +104,14 @@ export default function AdminUsers() {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-4xl font-black uppercase tracking-tighter text-black">User Management</h1>
-          <p className="font-bold text-black/40 uppercase text-xs tracking-widest mt-1">Manage admin and public accounts</p>
+          <h1 className="text-4xl font-black uppercase tracking-tighter text-black">
+            User Management
+          </h1>
+          <p className="font-bold text-black/40 uppercase text-xs tracking-widest mt-1">
+            Manage admin and public accounts
+          </p>
         </div>
-        <Button 
+        <Button
           onClick={() => setIsAdding(!isAdding)}
           variant={isAdding ? "white" : "black"}
           className="flex items-center gap-2"
@@ -118,9 +123,14 @@ export default function AdminUsers() {
 
       {isAdding && (
         <Card className="bg-yellow-50" isStatic shadowSize="8px">
-          <form onSubmit={handleAddUser} className="grid md:grid-cols-3 gap-6 items-end">
+          <form
+            onSubmit={handleAddUser}
+            className="grid md:grid-cols-3 gap-6 items-end"
+          >
             <div className="space-y-2">
-              <label className="text-xs font-black uppercase tracking-widest text-black/40">Username</label>
+              <label className="text-xs font-black uppercase tracking-widest text-black/40">
+                Username
+              </label>
               <div className="relative">
                 <FiUser className="absolute left-4 top-1/2 -translate-y-1/2 text-black/40" />
                 <input
@@ -134,7 +144,9 @@ export default function AdminUsers() {
               </div>
             </div>
             <div className="space-y-2">
-              <label className="text-xs font-black uppercase tracking-widest text-black/40">Password</label>
+              <label className="text-xs font-black uppercase tracking-widest text-black/40">
+                Password
+              </label>
               <div className="relative">
                 <FiShield className="absolute left-4 top-1/2 -translate-y-1/2 text-black/40" />
                 <input
@@ -149,7 +161,9 @@ export default function AdminUsers() {
             </div>
             <div className="flex gap-4 items-center">
               <div className="flex-1 space-y-2">
-                <label className="text-xs font-black uppercase tracking-widest text-black/40">Role</label>
+                <label className="text-xs font-black uppercase tracking-widest text-black/40">
+                  Role
+                </label>
                 <select
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
@@ -159,7 +173,12 @@ export default function AdminUsers() {
                   <option value="admin">Admin</option>
                 </select>
               </div>
-              <Button type="submit" disabled={submitting} variant="black" className="py-3.5 px-6">
+              <Button
+                type="submit"
+                disabled={submitting}
+                variant="black"
+                className="py-3.5 px-6"
+              >
                 {submitting ? "..." : "Create"}
               </Button>
             </div>
@@ -169,15 +188,21 @@ export default function AdminUsers() {
 
       <div className="grid gap-4">
         {loading ? (
-          <div className="p-10 text-center font-black uppercase animate-pulse">Loading Users...</div>
+          <div className="p-10 text-center font-black uppercase animate-pulse">
+            Loading Users...
+          </div>
         ) : users.length === 0 ? (
-          <div className="p-10 text-center border-4 border-dashed border-black/10 font-bold opacity-30 italic">No users found</div>
+          <div className="p-10 text-center border-4 border-dashed border-black/10 font-bold opacity-30 italic">
+            No users found
+          </div>
         ) : (
           users.map((u) => (
             <Card key={u.id} className="bg-white" shadowSize="4px">
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
-                  <div className={`w-12 h-12 border-4 border-black flex items-center justify-center text-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] ${u.role === 'admin' ? 'bg-yellow-300' : 'bg-cyan-300'}`}>
+                  <div
+                    className={`w-12 h-12 border-4 border-black flex items-center justify-center text-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] ${u.role === "admin" ? "bg-yellow-300" : "bg-cyan-300"}`}
+                  >
                     <FiUser />
                   </div>
                   {editingId === u.id ? (
@@ -199,8 +224,12 @@ export default function AdminUsers() {
                     </div>
                   ) : (
                     <div>
-                      <h3 className="font-black uppercase text-lg leading-none">{u.username}</h3>
-                      <span className={`inline-block mt-1 px-2 py-0.5 border-2 border-black text-[10px] font-black uppercase tracking-tighter ${u.role === 'admin' ? 'bg-yellow-300' : 'bg-cyan-300'}`}>
+                      <h3 className="font-black uppercase text-lg leading-none">
+                        {u.username}
+                      </h3>
+                      <span
+                        className={`inline-block mt-1 px-2 py-0.5 border-2 border-black text-[10px] font-black uppercase tracking-tighter ${u.role === "admin" ? "bg-yellow-300" : "bg-cyan-300"}`}
+                      >
                         {u.role}
                       </span>
                     </div>
@@ -210,16 +239,22 @@ export default function AdminUsers() {
                 <div className="flex gap-2">
                   {editingId === u.id ? (
                     <>
-                      <button onClick={() => handleUpdateUser(u.id)} className="p-2 border-2 border-black bg-green-400 hover:bg-green-500 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-[1px] active:translate-y-[1px]">
+                      <button
+                        onClick={() => handleUpdateUser(u.id)}
+                        className="p-2 border-2 border-black bg-green-400 hover:bg-green-500 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-[1px] active:translate-y-[1px]"
+                      >
                         <FiCheck className="font-bold" />
                       </button>
-                      <button onClick={() => setEditingId(null)} className="p-2 border-2 border-black bg-red-400 hover:bg-red-500 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-[1px] active:translate-y-[1px]">
+                      <button
+                        onClick={() => setEditingId(null)}
+                        className="p-2 border-2 border-black bg-red-400 hover:bg-red-500 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-[1px] active:translate-y-[1px]"
+                      >
                         <FiX />
                       </button>
                     </>
                   ) : (
                     <>
-                      <button 
+                      <button
                         onClick={() => {
                           setEditingId(u.id);
                           setEditUsername(u.username);
@@ -230,7 +265,7 @@ export default function AdminUsers() {
                         <FiEdit2 />
                       </button>
                       {u.username !== "rahmat" && (
-                        <button 
+                        <button
                           onClick={() => handleDeleteUser(u.id, u.username)}
                           className="p-2 border-2 border-black bg-white text-red-500 hover:bg-red-50 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-[1px] active:translate-y-[1px]"
                         >

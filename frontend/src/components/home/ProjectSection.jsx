@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { getProjects } from "../../lib/api";
+import { API_BASE_URL, getProjects } from "../../lib/api";
+
 import ProjectCard from "./ProjectCard";
 
-const API_URL = "http://localhost:3000";
+// API_BASE_URL is used for SSE/EventSource endpoints
 
 export default function ProjectsSection() {
   const [projects, setProjects] = useState([]);
@@ -26,11 +27,11 @@ export default function ProjectsSection() {
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, []);
 
   useEffect(() => {
-    const es = new EventSource(`${API_URL}/projects/events`);
+    const es = new EventSource(`${API_BASE_URL}/projects/events`);
 
     es.addEventListener("project_changed", () => {
       fetchProjects().catch((err) => console.error(err));

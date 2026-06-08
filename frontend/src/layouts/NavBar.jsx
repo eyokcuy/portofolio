@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import NavItem from "../ui/NavItem";
 
 const navLinks = [
   { id: "home", label: "Home" },
   { id: "about", label: "About" },
   { id: "work", label: "Work" },
+  { id: "services", label: "Services" },
+  { id: "tech-stack", label: "Tech" },
+  { id: "process", label: "Process" },
+  { id: "case-studies", label: "Cases" },
+  { id: "achievements", label: "Achievements" },
   { id: "contact", label: "Contact" },
 ];
 
@@ -53,7 +59,12 @@ export default function NavBar() {
 
   return (
     <nav className="w-full bg-yellow-300 border-b-4 border-black font-mono fixed top-0 left-0 z-50">
-      <div className="max-w-[1700px] mx-auto px-16 flex items-center justify-between h-16 relative">
+      <motion.div
+        className="max-w-[1700px] mx-auto px-4 md:px-16 flex items-center justify-between h-16 relative"
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      >
         <Link
           to="/"
           className="text-xl font-black uppercase tracking-tight border-2 border-black bg-white px-3 py-1
@@ -61,93 +72,140 @@ export default function NavBar() {
                      hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px]
                      transition-all duration-100"
         >
-          eyokkk
+          <motion.span
+            whileHover={{ rotate: -2 }}
+            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          >
+            eyokkk
+          </motion.span>
         </Link>
 
         {/* Desktop links */}
-        <div className="hidden md:flex items-center gap-4 absolute left-1/2 -translate-x-1/2">
-          {navLinks.map(({ id, label }) => (
-            <NavItem
+        <div className="hidden md:flex items-center gap-2 absolute left-1/2 -translate-x-1/2">
+          {navLinks.map(({ id, label }, index) => (
+            <motion.div
               key={id}
-              label={label}
-              isActive={activeId === id}
-              onClick={(e) => {
-                e.preventDefault();
-                setActiveId(id);
-                handleScroll(id);
-              }}
-            />
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05, duration: 0.3 }}
+            >
+              <NavItem
+                label={label}
+                isActive={activeId === id}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setActiveId(id);
+                  handleScroll(id);
+                }}
+              />
+            </motion.div>
           ))}
         </div>
 
         {/* CTA buttons */}
         <div className="hidden md:flex items-center gap-2">
-          <NavItem to="/login" label="Login" variant="white" />
-          <NavItem to="/signup" label="Sign Up →" variant="black" />
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3, duration: 0.3 }}
+          >
+            <NavItem to="/login" label="Login" variant="white" />
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.35, duration: 0.3 }}
+          >
+            <NavItem to="/signup" label="Sign Up →" variant="black" />
+          </motion.div>
         </div>
 
         {/* Hamburger */}
-        <button
+        <motion.button
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Toggle menu"
           className="md:hidden flex flex-col gap-1.5 p-2 border-2 border-black bg-white
                      shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]
                      hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px]
                      transition-all duration-100"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
-          <span
-            className={`block w-5 h-0.5 bg-black transition-all duration-200 ${
-              menuOpen ? "rotate-45 translate-y-2" : ""
-            }`}
+          <motion.span
+            className="block w-5 h-0.5 bg-black"
+            animate={
+              menuOpen
+                ? { rotate: 45, translateY: 8 }
+                : { rotate: 0, translateY: 0 }
+            }
+            transition={{ duration: 0.2 }}
           />
-          <span
-            className={`block w-5 h-0.5 bg-black transition-all duration-200 ${
-              menuOpen ? "opacity-0" : ""
-            }`}
+          <motion.span
+            className="block w-5 h-0.5 bg-black"
+            animate={menuOpen ? { opacity: 0 } : { opacity: 1 }}
+            transition={{ duration: 0.2 }}
           />
-          <span
-            className={`block w-5 h-0.5 bg-black transition-all duration-200 ${
-              menuOpen ? "-rotate-45 -translate-y-2" : ""
-            }`}
+          <motion.span
+            className="block w-5 h-0.5 bg-black"
+            animate={
+              menuOpen
+                ? { rotate: -45, translateY: -8 }
+                : { rotate: 0, translateY: 0 }
+            }
+            transition={{ duration: 0.2 }}
           />
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
 
       {/* Mobile menu */}
-      {menuOpen && (
-        <div className="md:hidden border-t-4 border-black bg-yellow-300 px-4 pb-4 flex flex-col gap-2 pt-4">
-          {navLinks.map(({ id, label }) => (
-            <NavItem
-              key={id}
-              label={label}
-              isActive={activeId === id}
-              onClick={(e) => {
-                e.preventDefault();
-                setActiveId(id);
-                handleScroll(id);
-                setMenuOpen(false);
-              }}
-            />
-          ))}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            className="md:hidden border-t-4 border-black bg-yellow-300 px-4 pb-4 flex flex-col gap-2 pt-4"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            {navLinks.map(({ id, label }, index) => (
+              <motion.div
+                key={id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.03, duration: 0.2 }}
+              >
+                <NavItem
+                  label={label}
+                  isActive={activeId === id}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setActiveId(id);
+                    handleScroll(id);
+                    setMenuOpen(false);
+                  }}
+                />
+              </motion.div>
+            ))}
 
-          <div className="flex gap-2 mt-1">
-            <NavItem
-              to="/login"
-              label="Login"
-              variant="white"
-              className="flex-1"
-              onClick={() => setMenuOpen(false)}
-            />
-            <NavItem
-              to="/signup"
-              label="Sign Up →"
-              variant="black"
-              className="flex-1"
-              onClick={() => setMenuOpen(false)}
-            />
-          </div>
-        </div>
-      )}
+            <div className="flex gap-2 mt-1">
+              <NavItem
+                to="/login"
+                label="Login"
+                variant="white"
+                className="flex-1"
+                onClick={() => setMenuOpen(false)}
+              />
+              <NavItem
+                to="/signup"
+                label="Sign Up →"
+                variant="black"
+                className="flex-1"
+                onClick={() => setMenuOpen(false)}
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }

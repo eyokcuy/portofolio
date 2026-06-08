@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import Card from "../../ui/Card";
 import { useEffect, useState, useCallback } from "react";
-import { getStats, getProjects } from "../../lib/api";
+import { API_BASE_URL, getStats, getProjects } from "../../lib/api";
 
 const DEFAULT_COLORS = ["#67e8f9", "#fde047", "#f9a8d4", "#86efac"];
 
@@ -69,8 +69,8 @@ export default function StatsSection() {
 
   // SSE for real-time updates
   useEffect(() => {
-    const esStats = new EventSource("http://localhost:3000/stats/events");
-    const esProjects = new EventSource("http://localhost:3000/projects/events");
+    const esStats = new EventSource(`${API_BASE_URL}/stats/events`);
+    const esProjects = new EventSource(`${API_BASE_URL}/projects/events`);
 
     const listener = () => fetchData();
 

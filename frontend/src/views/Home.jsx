@@ -6,13 +6,20 @@ import AboutSection from "../components/home/AboutSection";
 import ServicesSection from "../components/home/ServicesSection";
 import TechStackSection from "../components/home/TechStackSection";
 import ProjectsSection from "../components/home/ProjectSection";
+import ProcessSection from "../components/home/ProcessSection";
+import AchievementsSection from "../components/home/AchievementsSection";
+import CaseStudiesSection from "../components/home/CaseStudiesSection";
 import FeedbacksSection from "../components/home/FeedbacksSection";
 import ContactSection from "../components/home/ContactSection";
 import SectionReveal from "../components/animation/SectionReveal";
+import FloatingParticles from "../components/animation/FloatingParticles";
 
 export default function Home() {
   return (
     <main className="bg-[#f5f5f0] min-h-screen pt-24 overflow-hidden relative">
+      {/* Floating Particles Background */}
+      <FloatingParticles />
+
       {/* TEXTURE / SHAPE DECORATION (like Footer) */}
       <div
         aria-hidden="true"
@@ -85,6 +92,27 @@ export default function Home() {
         <section id="feedbacks">
           <SectionReveal>
             <FeedbacksSection />
+          </SectionReveal>
+        </section>
+
+        {/* PROCESS */}
+        <section id="process">
+          <SectionReveal>
+            <ProcessSection />
+          </SectionReveal>
+        </section>
+
+        {/* CASE STUDIES */}
+        <section id="case-studies">
+          <SectionReveal>
+            <CaseStudiesSection />
+          </SectionReveal>
+        </section>
+
+        {/* ACHIEVEMENTS */}
+        <section id="achievements">
+          <SectionReveal>
+            <AchievementsSection />
           </SectionReveal>
         </section>
 

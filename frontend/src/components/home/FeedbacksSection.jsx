@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { getFeedbacks } from "../../lib/api";
+import { API_BASE_URL, getFeedbacks } from "../../lib/api";
+
 import Card from "../../ui/Card";
 import Button from "../../ui/Button";
 import FeedbackModal from "./FeedbackModal";
@@ -29,7 +30,7 @@ export default function FeedbacksSection() {
 
   // SSE for real-time updates
   useEffect(() => {
-    const es = new EventSource("http://localhost:3000/feedbacks/events");
+    const es = new EventSource(`${API_BASE_URL}/feedbacks/events`);
 
     es.addEventListener("feedback_changed", () => {
       getFeedbacks()
@@ -46,10 +47,8 @@ export default function FeedbacksSection() {
     };
   }, []);
 
-  const prev = () =>
-    setActive((a) => (a === 0 ? feedbacks.length - 1 : a - 1));
-  const next = () =>
-    setActive((a) => (a === feedbacks.length - 1 ? 0 : a + 1));
+  const prev = () => setActive((a) => (a === 0 ? feedbacks.length - 1 : a - 1));
+  const next = () => setActive((a) => (a === feedbacks.length - 1 ? 0 : a + 1));
 
   if (loading) {
     return (
@@ -98,7 +97,11 @@ export default function FeedbacksSection() {
 
   return (
     <section className="max-w-[1500px] mx-auto px-4 md:px-6 py-14">
-      <Card className="bg-black text-yellow-300" shadowSize="12px" hoverScale={1}>
+      <Card
+        className="bg-black text-yellow-300"
+        shadowSize="12px"
+        hoverScale={1}
+      >
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <h2 className="text-4xl md:text-5xl font-black uppercase leading-none">
             Feedbacks
@@ -203,10 +206,10 @@ export default function FeedbacksSection() {
         </div>
       </Card>
 
-      <FeedbackModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        onSuccess={fetchFeedbacks} 
+      <FeedbackModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={fetchFeedbacks}
       />
     </section>
   );
