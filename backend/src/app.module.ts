@@ -10,21 +10,35 @@ import { UploadModule } from './upload/upload.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { StatsModule } from './stats/stats.module';
+import { ConfigModule } from '@nestjs/config';
 
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '',
-      database: 'portofolio',
+
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT),
+
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
+
       autoLoadEntities: true,
-      synchronize: true, // dev only
+      synchronize: true,
+
+      extra: {
+        ssl: {
+          rejectUnauthorized: false,
+        },
+      },
     }),
 
     ThrottlerModule.forRoot([

@@ -6,14 +6,31 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  app.enableCors();
-  app.set('trust proxy', 1);
+  app.enableCors({
+    origin: [
+      'http://localhost:5173',
+      process.env.FRONTEND_URL || 'http://localhost:3000',
+      /\.vercel\.app$/,
+    ],
 
-  // Serve uploaded files statically
+    methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
+
+    credentials: true,
+
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+  });
+
   app.useStaticAssets(join(__dirname, '..', 'uploads'), {
     prefix: '/uploads',
   });
 
-  await app.listen(3000);
+  app.setGlobalPrefix('api');
+
+  const port = process.env.PORT || 3000;
+
+  await app.listen(port);
+
+  console.log(`Backend running on port ${port}`);
 }
+
 bootstrap();
